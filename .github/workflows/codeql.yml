@@ -23,7 +23,7 @@ env:
   SOLUTION: "./PumaPrey.sln"
   CONFIGURATION: "Release"
   
-  PROJECT: "./src/Coyote/Coyote.csproj"
+  PROJECT: "./Coyote/Coyote.csproj"
   TEST_SUITE: "Coyote.Tests.csproj"  
 
 jobs:
