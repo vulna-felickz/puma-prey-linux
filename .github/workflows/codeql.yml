@@ -22,6 +22,9 @@ on:
 env:
   SOLUTION: "./PumaPrey.sln"
   CONFIGURATION: "Release"
+  
+  PROJECT: "./src/Coyote/Coyote.csproj"
+  TEST_SUITE: "Coyote.Tests.csproj"  
 
 jobs:
   analyze:
@@ -31,7 +34,7 @@ jobs:
     #   - https://gh.io/supported-runners-and-hardware-resources
     #   - https://gh.io/using-larger-runners
     # Consider using larger runners for possible analysis time improvements.
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'windows-latest' }}
+    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
     timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
     permissions:
       actions: read
@@ -66,12 +69,18 @@ jobs:
     # - name: Autobuild
     #   uses: github/codeql-action/autobuild@v3
 
-    - name: Build
-      shell: powershell
+    # - name: Windows Build
+    #   shell: powershell
+    #   run: |
+    #     $MSBuildPath = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find "MSBuild\**\Bin\MSBuild.exe" | Select-Object -first 1  
+    #     nuget restore ${{ env.SOLUTION }}
+    #     & $MSBuildPath ${{ env.SOLUTION }} /p:Configuration=${{ env.CONFIGURATION }}
+
+    - name: Dotnet Build
+      shell: bash
       run: |
-        $MSBuildPath = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find "MSBuild\**\Bin\MSBuild.exe" | Select-Object -first 1  
-        nuget restore ${{ env.SOLUTION }}
-        & $MSBuildPath ${{ env.SOLUTION }} /p:Configuration=${{ env.CONFIGURATION }}
+        dotnet restore ${{ env.PROJECT }}
+        dotnet build ${{ env.PROJECT }}
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
