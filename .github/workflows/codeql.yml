@@ -18,6 +18,7 @@ on:
     branches: [ "main" ]
   schedule:
     - cron: '23 18 * * 4'
+  workflow_dispatch:
 
 env:
   SOLUTION: "./PumaPrey.sln"
